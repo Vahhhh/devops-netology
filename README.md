@@ -39,3 +39,4 @@ override.tf.json
 # Игнорируются указанные ниже файлы в любой поддиректории ниже /terraform/
 .terraformrc
 terraform.rc
+New line
