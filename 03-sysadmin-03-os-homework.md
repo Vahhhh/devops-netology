@@ -39,1116 +39,26 @@
 
 
 # Ответы
+
 1. Думаю, что ответ `chdir`, хотя не очень понимаю - вроде бы там весь вывод strace - сплошные системные вызовы, и надо было все перечислить?
+
 2. БД лежит в бинарном файле `/usr/share/misc/magic.mgc`, а пользователь, как я понял, может дополнить своей информацией файлы `/etc/magic`, либо `/home/$USERNAME/.magic`
+
 3. Если я правильно понял вопрос, то я с этим сталкивался ;) Удалил файл лога астериска, а он продолжал туда писать.. Надо сделать так (путь на память пишу) - `echo " " > /var/log/asterisk/asterisk.log`
+
 4. Сначала хотел ответить, что ресурсы занимаются, потом почитал и понял, что не занимаются. Зомби процессы занимают только место в списке процессов, и, как я понял, это количество также конечно и если их будет слишком много - начнутся те же проблемы - невозможность создать новый процесс, в том числе невозможность подключиться и т.д.
-5. У меня получилась куча файлов, я убрал обращение к отсутствующим файлам и показал вывод. Хотя что-то мне подсказывает, что вопрос был в другом ;)
+
+5. Не так поставил.. По 1й инструкции утилита стоит, запускается, но не работает... Сделал по 2-й инструкции - всё заработало.
+
 ```
-vagrant@vagrant:~$ sudo strace -e trace=openat opensnoop-bpfcc 2>&1 | grep -v "No such"
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libutil.so.1", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/site.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/site.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/os.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/os.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/posixpath.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/posixpath.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/stat.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/stat.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/genericpath.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/genericpath.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/warnings.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/warnings.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/linecache.py", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/linecache.pyc", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/types.py", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/types.pyc", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/UserDict.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/UserDict.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/_abcoll.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/_abcoll.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/abc.py", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/abc.pyc", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/_weakrefset.py", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/_weakrefset.pyc", O_RDONLY) = 9
-openat(AT_FDCWD, "/usr/lib/python2.7/copy_reg.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/copy_reg.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/traceback.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/traceback.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/sysconfig.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/sysconfig.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/re.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/re.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/sre_compile.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/sre_compile.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/sre_parse.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/sre_parse.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/sre_constants.py", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/sre_constants.pyc", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/_sysconfigdata.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/_sysconfigdata.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/plat-x86_64-linux-gnu/_sysconfigdata_nd.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/plat-x86_64-linux-gnu/_sysconfigdata_nd.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/local/lib/python2.7/dist-packages", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/sitecustomize.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/sitecustomize.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/__init__.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/__init__.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/codecs.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/codecs.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/aliases.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/aliases.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/utf_8.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/utf_8.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/sbin/opensnoop-bpfcc", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/sbin/opensnoop-bpfcc", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/__future__.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/__future__.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/__init__.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/__init__.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/atexit.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/atexit.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/ctypes/__init__.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/ctypes/__init__.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/lib-dynload/_ctypes.x86_64-linux-gnu.so", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/lib-dynload/_ctypes.x86_64-linux-gnu.so", O_RDONLY|O_CLOEXEC) = 6
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 6
-openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/libffi.so.6", O_RDONLY|O_CLOEXEC) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/struct.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/struct.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/ctypes/_endian.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/ctypes/_endian.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/proc/self/status", O_RDONLY) = 5
-openat(AT_FDCWD, "/proc/mounts", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/json/__init__.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/json/__init__.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/json/decoder.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/json/decoder.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/json/scanner.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/json/scanner.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/lib-dynload/_json.x86_64-linux-gnu.so", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/lib-dynload/_json.x86_64-linux-gnu.so", O_RDONLY|O_CLOEXEC) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/json/encoder.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/json/encoder.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/libbcc.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/libbcc.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
-openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/libbcc.so.0", O_RDONLY|O_CLOEXEC) = 5
-openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/libelf.so.1", O_RDONLY|O_CLOEXEC) = 5
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libtinfo.so.5", O_RDONLY|O_CLOEXEC) = 5
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/table.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/table.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/collections.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/collections.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/keyword.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/keyword.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/heapq.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/heapq.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/functools.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/functools.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/multiprocessing/__init__.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/multiprocessing/__init__.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/multiprocessing/process.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/multiprocessing/process.pyc", O_RDONLY) = 7
-openat(AT_FDCWD, "/dev/urandom", O_RDONLY) = 7
-openat(AT_FDCWD, "/usr/lib/python2.7/multiprocessing/util.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/multiprocessing/util.pyc", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/weakref.py", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/weakref.pyc", O_RDONLY) = 9
-openat(AT_FDCWD, "/usr/lib/python2.7/threading.py", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/threading.pyc", O_RDONLY) = 9
-openat(AT_FDCWD, "/etc/localtime", O_RDONLY|O_CLOEXEC) = 9
-openat(AT_FDCWD, "/usr/lib/python2.7/subprocess.py", O_RDONLY) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/subprocess.pyc", O_RDONLY) = 9
-openat(AT_FDCWD, "/usr/lib/python2.7/pickle.py", O_RDONLY) = 9
-openat(AT_FDCWD, "/usr/lib/python2.7/pickle.pyc", O_RDONLY) = 10
-openat(AT_FDCWD, "/usr/lib/python2.7/lib-dynload/_multiprocessing.x86_64-linux-gnu.so", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/lib-dynload/_multiprocessing.x86_64-linux-gnu.so", O_RDONLY|O_CLOEXEC) = 8
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/perf.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/perf.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/utils.py", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/utils.pyc", O_RDONLY) = 8
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 4
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/librt.so.1", O_RDONLY|O_CLOEXEC) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/usdt.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/dist-packages/bcc/usdt.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/argparse.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/argparse.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/copy.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/copy.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/textwrap.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/textwrap.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/string.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/string.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/gettext.py", O_RDONLY) = 4
-openat(AT_FDCWD, "/usr/lib/python2.7/gettext.pyc", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/locale.py", O_RDONLY) = 5
-openat(AT_FDCWD, "/usr/lib/python2.7/locale.pyc", O_RDONLY) = 6
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/ascii.py", O_RDONLY) = 3
-openat(AT_FDCWD, "/usr/lib/python2.7/encodings/ascii.pyc", O_RDONLY) = 4
-openat(AT_FDCWD, "/../lib/x86_64-linux-gnu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-openat(AT_FDCWD, "/../lib/x86_64-linux-gnu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-openat(AT_FDCWD, "/usr/lib/gcc/x86_64-linux-gnu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-openat(AT_FDCWD, "/usr/lib/gcc/x86_64-linux-gnu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3
-openat(AT_FDCWD, "/etc/lsb-release", O_RDONLY) = 3
-openat(AT_FDCWD, "/etc/debian_version", O_RDONLY) = 3
-openat(AT_FDCWD, "././include/linux/kconfig.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/generated/autoconf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler-gcc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler-clang.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/int-ll64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/int-ll64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/bitsperlong.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitsperlong.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/bitsperlong.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/posix_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/stddef.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/stddef.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/posix_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/posix_types_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/posix_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/bpf_common.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/bpf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/if_packet.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/generated/uapi/linux/version.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/segment.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/const.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/alternative.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/stringify.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/asm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cache.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/linkage.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/export.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/linkage.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mem_encrypt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mem_encrypt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/init.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/barrier.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/nops.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/barrier.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kasan-checks.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/bootparam.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/screen_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/screen_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/apm_bios.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/apm_bios.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/edd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/edd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/ist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/video/edid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/video/edid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page_64_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/kaslr.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ptrace-abi.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/processor-flags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/processor-flags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/paravirt_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/desc_defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/kmap_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/kmap_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/pgtable_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/pgtable_64_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/sparsemem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/pgtable-nop4d.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/nospec-branch.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/static_key.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/jump_label.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/atomic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/atomic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cmpxchg.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cpufeatures.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/required-features.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/disabled-features.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cmpxchg_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/rmwcc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/atomic64_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/atomic-long.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kernel.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bitops.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bits.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/bitops.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/find.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/sched.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/arch_hweight.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/const_hweight.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/le.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/byteorder.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/byteorder/little_endian.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/byteorder/little_endian.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/swab.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/swab.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/swab.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/byteorder/generic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/ext2-atomic-setbit.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/log2.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/typecheck.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/printk.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kern_levels.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/cache.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/kernel.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/sysinfo.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/dynamic_debug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/build_bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/alternative-asm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/msr-index.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/spinlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qspinlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qrwlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/limits.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/sched.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/sched.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/current.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/percpu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/percpu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/threads.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/percpu-defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/pid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rculist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/list.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/poison.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rcupdate.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/irqflags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/irqflags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/paravirt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/cpumask.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bitmap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/string.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/string.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/string.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/string_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/frame.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/preempt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/preempt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/thread_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/restart_block.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/thread_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/range.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/memory_model.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/pfn.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/getorder.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cpufeature.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/processor.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/math_emu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/sigcontext.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/msr.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/errno-base.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cpumask.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/msr.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/tracepoint-defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/special_insns.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/fpu/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/unwind_hints.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/orc_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/personality.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/personality.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/math64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/div64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/div64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/err.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bottom_half.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/lockdep.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rcutree.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/sem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/time64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/time.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/sem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/ipc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/spinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/spinlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/spinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/qspinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qspinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/qrwlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qrwlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/spinlock_api_smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwlock_api_smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/uidgid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/highuid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rhashtable.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/jhash.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/unaligned/packed_struct.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/list_nulls.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/workqueue.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timer.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/ktime.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/time.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/seqlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/time32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/jiffies.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/timex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/timex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/tsc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/generated/timeconst.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timekeeping.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timekeeping32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/debugobjects.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mutex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/osq_lock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/debug_locks.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/ipc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ipcbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/ipcbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/refcount.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/refcount.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/sembuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/shm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/shm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/hugetlb_encode.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/shmbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/shmbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/shmparam.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kcov.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/kcov.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/plist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/hrtimer.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rbtree.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/percpu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mmdebug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/llist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mpspec.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mpspec_def.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/x86_init.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/apicdef.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/apic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/fixmap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/acpi.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/acpi/pdc_intel.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/numa.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/nodemask.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/numa.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/topology.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/topology.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mmu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwsem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/rwsem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/realmode.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/io.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/asm/early_ioremap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/early_ioremap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/iomap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/pci_iomap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/xen/xen.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/xen/interface/xen.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/interface.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/interface_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/pvclock-abi.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/hypervisor.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/io.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/logic_pio.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/fwnode.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/vmalloc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/vsyscall.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/fixmap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/hardirq.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/io_apic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/irq_vectors.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timerqueue.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/uapi/asm/unistd_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/asm/unistd_64_x32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/ia32_unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/asm/unistd_32_ia32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/latencytop.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/sched/prio.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/signal_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/signal.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/signal.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/signal.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/signal-defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/siginfo.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/siginfo.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mm_types_task.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/tlbbatch.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/task_io_accounting.h", O_RDONLY) = 3
-openat(AT_FDCWD, "././include/linux/kconfig.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/generated/autoconf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler-gcc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler-clang.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/int-ll64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/int-ll64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/bitsperlong.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitsperlong.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/bitsperlong.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/posix_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/stddef.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/stddef.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/posix_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/posix_types_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/posix_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/bpf_common.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/bpf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/if_packet.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/generated/uapi/linux/version.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/segment.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/const.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/alternative.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/stringify.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/asm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cache.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/linkage.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/export.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/linkage.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mem_encrypt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mem_encrypt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/init.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/compiler.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/barrier.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/nops.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/barrier.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kasan-checks.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/bootparam.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/screen_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/screen_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/apm_bios.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/apm_bios.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/ioctl.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/edd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/edd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/ist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/video/edid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/video/edid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page_64_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/kaslr.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ptrace-abi.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/processor-flags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/processor-flags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/paravirt_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/desc_defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/kmap_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/kmap_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/pgtable_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/pgtable_64_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/sparsemem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/pgtable-nop4d.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/nospec-branch.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/static_key.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/jump_label.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/atomic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/atomic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cmpxchg.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cpufeatures.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/required-features.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/disabled-features.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cmpxchg_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/rmwcc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/atomic64_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/atomic-long.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kernel.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bitops.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bits.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/bitops.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/find.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/sched.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/arch_hweight.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/const_hweight.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/le.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/byteorder.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/byteorder/little_endian.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/byteorder/little_endian.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/swab.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/swab.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/swab.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/byteorder/generic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/bitops/ext2-atomic-setbit.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/log2.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/typecheck.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/printk.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kern_levels.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/cache.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/kernel.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/sysinfo.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/dynamic_debug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/build_bug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/alternative-asm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/msr-index.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/spinlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qspinlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qrwlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/ptrace.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/limits.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/sched.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/sched.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/current.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/percpu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/percpu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/threads.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/percpu-defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/pid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rculist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/list.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/poison.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rcupdate.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/irqflags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/irqflags.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/paravirt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/cpumask.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bitmap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/string.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/string.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/string.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/string_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/frame.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/preempt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/preempt.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/thread_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/restart_block.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/thread_info.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/page_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/range.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/memory_model.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/pfn.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/getorder.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cpufeature.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/processor.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/math_emu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/sigcontext.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/msr.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/errno-base.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/cpumask.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/msr.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/tracepoint-defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/special_insns.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/fpu/types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/unwind_hints.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/orc_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/personality.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/personality.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/math64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/div64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/div64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/err.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/bottom_half.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/lockdep.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rcutree.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/sem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/time64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/time.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/sem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/ipc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/spinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/spinlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwlock_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/spinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/qspinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qspinlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/qrwlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/qrwlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/spinlock_api_smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwlock_api_smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/uidgid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/highuid.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rhashtable.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/errno.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/jhash.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/unaligned/packed_struct.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/list_nulls.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/workqueue.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timer.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/ktime.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/time.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/seqlock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/time32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/jiffies.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/timex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/param.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/timex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/tsc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/generated/timeconst.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timekeeping.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timekeeping32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/debugobjects.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mutex.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/osq_lock.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/debug_locks.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/ipc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ipcbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/ipcbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/refcount.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/refcount.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/sembuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/shm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/shm.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/hugetlb_encode.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/shmbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/shmbuf.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/shmparam.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/kcov.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/kcov.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/plist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/hrtimer.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rbtree.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/percpu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mmdebug.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/llist.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/smp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mpspec.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mpspec_def.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/x86_init.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/apicdef.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/apic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/fixmap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/acpi.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/acpi/pdc_intel.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/numa.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/nodemask.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/numa.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/topology.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/topology.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/mmu.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/rwsem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/rwsem.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/realmode.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/io.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/asm/early_ioremap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/early_ioremap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/iomap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/pci_iomap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/xen/xen.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/xen/interface/xen.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/interface.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/interface_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/pvclock-abi.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/hypervisor.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/io.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/logic_pio.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/fwnode.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/vmalloc.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/vsyscall.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/fixmap.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/hardirq.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/io_apic.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/irq_vectors.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/timerqueue.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/uapi/asm/unistd_64.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/asm/unistd_64_x32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/ia32_unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "arch/x86/include/generated/asm/unistd_32_ia32.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/seccomp.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/linux/unistd.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/asm-generic/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/asm-generic/resource.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/latencytop.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/sched/prio.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/signal_types.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/uapi/linux/signal.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/signal.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/signal.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/signal-defs.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/siginfo.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./include/uapi/asm-generic/siginfo.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/mm_types_task.h", O_RDONLY) = 3
-openat(AT_FDCWD, "./arch/x86/include/asm/tlbbatch.h", O_RDONLY) = 3
-openat(AT_FDCWD, "include/linux/task_io_accounting.h", O_RDONLY) = 3
-openat(AT_FDCWD, "/sys/devices/system/cpu/possible", O_RDONLY) = 4
-openat(AT_FDCWD, "././include/linux/kconfig.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/generated/autoconf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/compiler_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/compiler-gcc.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/compiler-clang.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/int-ll64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/asm-generic/int-ll64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/bitsperlong.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bitsperlong.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/asm-generic/bitsperlong.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/posix_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/stddef.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/stddef.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/posix_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/posix_types_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/posix_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/bpf_common.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/bpf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/if_packet.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/generated/uapi/linux/version.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/ptrace.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/ptrace.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/segment.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/const.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/alternative.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/stringify.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/asm.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/cache.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/linkage.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/export.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/linkage.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/page_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/mem_encrypt.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/mem_encrypt.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/init.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/compiler.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/barrier.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/nops.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/barrier.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/kasan-checks.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/bootparam.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/screen_info.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/screen_info.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/apm_bios.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/apm_bios.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/ioctl.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ioctl.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/ioctl.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/asm-generic/ioctl.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/edd.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/edd.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/ist.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ist.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/video/edid.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/video/edid.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/page_64_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/kaslr.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ptrace.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ptrace-abi.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/processor-flags.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/processor-flags.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/paravirt_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/desc_defs.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/kmap_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/kmap_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/pgtable_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/pgtable_64_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/sparsemem.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/pgtable-nop4d.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/nospec-branch.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/static_key.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/jump_label.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/atomic.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/atomic.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/cmpxchg.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/cpufeatures.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/required-features.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/disabled-features.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/cmpxchg_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/rmwcc.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/atomic64_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/atomic-long.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/bug.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/bug.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bug.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/kernel.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/bitops.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/bits.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/bitops.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bitops/find.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bitops/sched.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/arch_hweight.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bitops/const_hweight.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bitops/le.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/byteorder.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/byteorder/little_endian.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/byteorder/little_endian.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/swab.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/swab.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/swab.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/byteorder/generic.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/bitops/ext2-atomic-setbit.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/log2.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/typecheck.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/printk.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/kern_levels.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/cache.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/kernel.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/sysinfo.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/dynamic_debug.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/build_bug.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/alternative-asm.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/msr-index.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/spinlock_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/qspinlock_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/qrwlock_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/ptrace.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/limits.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/sched.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/sched.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/current.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/percpu.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/percpu.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/threads.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/percpu-defs.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/pid.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rculist.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/list.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/poison.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rcupdate.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/irqflags.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/irqflags.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/paravirt.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/cpumask.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/bitmap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/string.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/string.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/string.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/string_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/frame.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/preempt.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/preempt.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/thread_info.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/restart_block.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/thread_info.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/page.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/page_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/range.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/memory_model.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/pfn.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/getorder.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/cpufeature.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/processor.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/math_emu.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/sigcontext.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/msr.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/errno.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/errno.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/errno-base.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/cpumask.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/msr.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/tracepoint-defs.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/special_insns.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/fpu/types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/unwind_hints.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/orc_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/personality.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/personality.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/math64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/div64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/div64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/err.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/bottom_half.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/lockdep.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rcutree.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/sem.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/time64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/time.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/sem.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/ipc.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/spinlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/spinlock_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rwlock_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/spinlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/qspinlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/qspinlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/qrwlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/qrwlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rwlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/spinlock_api_smp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rwlock_api_smp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/uidgid.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/highuid.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rhashtable.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/errno.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/errno.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/jhash.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/unaligned/packed_struct.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/list_nulls.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/workqueue.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/timer.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/ktime.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/time.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/seqlock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/time32.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/jiffies.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/timex.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/timex.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/param.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/param.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/param.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/asm-generic/param.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/timex.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/tsc.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/generated/timeconst.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/timekeeping.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/timekeeping32.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/debugobjects.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/mutex.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/osq_lock.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/debug_locks.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/ipc.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/ipcbuf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/ipcbuf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/refcount.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/refcount.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/sembuf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/shm.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/shm.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/hugetlb_encode.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/shmbuf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/shmbuf.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/shmparam.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/kcov.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/kcov.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/plist.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/hrtimer.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rbtree.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/percpu.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/mmdebug.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/smp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/llist.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/smp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/mpspec.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/mpspec_def.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/x86_init.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/apicdef.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/apic.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/fixmap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/acpi.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/acpi/pdc_intel.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/numa.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/nodemask.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/numa.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/topology.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/topology.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/mmu.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/rwsem.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/rwsem.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/realmode.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/io.h", O_RDONLY) = 5
-openat(AT_FDCWD, "arch/x86/include/generated/asm/early_ioremap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/early_ioremap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/iomap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/pci_iomap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/xen/xen.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/xen/interface/xen.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/interface.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/interface_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/pvclock-abi.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/xen/hypervisor.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/io.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/logic_pio.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/fwnode.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/vmalloc.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/vsyscall.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/fixmap.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/hardirq.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/io_apic.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/irq_vectors.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/timerqueue.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/seccomp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/seccomp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/seccomp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/unistd.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/unistd.h", O_RDONLY) = 5
-openat(AT_FDCWD, "arch/x86/include/generated/uapi/asm/unistd_64.h", O_RDONLY) = 5
-openat(AT_FDCWD, "arch/x86/include/generated/asm/unistd_64_x32.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/ia32_unistd.h", O_RDONLY) = 5
-openat(AT_FDCWD, "arch/x86/include/generated/asm/unistd_32_ia32.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/seccomp.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/linux/unistd.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/resource.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/resource.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/resource.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/asm-generic/resource.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/asm-generic/resource.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/latencytop.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/sched/prio.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/signal_types.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/uapi/linux/signal.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/signal.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/signal.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/signal-defs.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/uapi/asm/siginfo.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./include/uapi/asm-generic/siginfo.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/mm_types_task.h", O_RDONLY) = 5
-openat(AT_FDCWD, "./arch/x86/include/asm/tlbbatch.h", O_RDONLY) = 5
-openat(AT_FDCWD, "include/linux/task_io_accounting.h", O_RDONLY) = 5
-openat(AT_FDCWD, "/sys/kernel/debug/tracing/kprobe_events", O_WRONLY|O_APPEND) = 6
-openat(AT_FDCWD, "/sys/kernel/debug/tracing/events/kprobes/p_sys_open_bcc_13794/id", O_RDONLY) = 6
-openat(AT_FDCWD, "/sys/kernel/debug/tracing/kprobe_events", O_WRONLY|O_APPEND) = 9
-openat(AT_FDCWD, "/sys/kernel/debug/tracing/events/kprobes/r_sys_open_bcc_13794/id", O_RDONLY) = 9
-openat(AT_FDCWD, "/sys/devices/system/cpu/online", O_RDONLY) = 10
+root@vagrant:/usr/share/bcc/tools# ./opensnoop -d 1
+PID    COMM               FD ERR PATH
+984    vminfo              4   0 /var/run/utmp
+673    dbus-daemon        -1   2 /usr/local/share/dbus-1/system-services
+673    dbus-daemon        18   0 /usr/share/dbus-1/system-services
+673    dbus-daemon        -1   2 /lib/dbus-1/system-services
 ```
+Конечно утилит там вал, я там себе по tcp присмотрел кучу.. Ну и по открытым файлам, и т.д. - просто супер информация!!
 
 6. `/proc/sys/kernel/{ostype, hostname, osrelease, version, domainname}`
 
@@ -1161,8 +71,115 @@ openat(AT_FDCWD, "/sys/devices/system/cpu/online", O_RDONLY) = 10
 `-e` - завершает выполнение команды/скрипта, если код выхода отличен от 0
 `-u` - завершает выполнение скрипта и выдаёт ошибку, если используется не заданная ранее переменная
 `-x` - выводит команды и их аргументы при их выполнении
-`-o pipefail` - 
+`-o pipefail` - выводит первый ненулевой код выхода конвейеров, если он был, либо 0, если всё ок.
+Я хоть и не скриптописатель, потестировал - реально удобно... А я раньше когда чужие bash скрипты менял - кучу всяких echo промежуточных вставлял... А половина ещё не получалась, т.к. про 2>&1 не знал... ;)
+
+9. У меня чаще встречается S, рядом с ним ноздря в ноздрю идёт I. Ниже привёл метод подсчёта.. Наверно некорректный, буду рад критике.
+```
+ps axo stat | grep -v grep | grep -v STAT -c ; \
+> ps axo stat | grep -v grep | grep -v STAT | grep -c I ; \
+> ps axo stat | grep -v grep | grep -v STAT | grep -c S ; \
+> ps axo stat | grep -v grep | grep -v STAT | grep -c T ; \
+> ps axo stat | grep -v grep | grep -v STAT | grep -c t ; \
+> ps axo stat | grep -v grep | grep -v STAT | grep -c R
+110
+52
+55
+2
+1
+1
+```
+
+10. Есть подозрение, что да (главное - знать что искать ;))) 
+```
+vagrant@vagrant:~$ dmesg | grep virt
+[    0.004457] CPU MTRRs all blank - virtualized system.
+[    0.144788] Booting paravirtualized kernel on KVM
+[    3.577085] systemd[1]: Detected virtualization oracle.
+```
+На другой машинке пишет, что VmWare стоит.. ;)
+```
+[root@asterisk vah]# dmesg | grep virt
+Booting paravirtualized kernel on bare hardware
+virtual kernel memory layout:
+input: Macintosh mouse button emulation as /devices/virtual/input/input1
+VMware vmxnet3 virtual NIC driver - version 1.1.30.0-k-NAPI
+```
+Нашёл одну единственную невиртуализированную машину, вот что пишет... :) Хотя она очень странная.
+```
+alienvault:~# dmesg | grep virt
+alienvault:~# 
+```
+
+11. Еле-еле нагуглил вот тут - https://www.kernel.org/doc/Documentation/sysctl/fs.txt
+`fs.nr-open` - максимальное количество дескрипторов файла, которые могут быть зарезервированы под процесс. По умолчанию 1024^2=1048576.
+Там же написано, что зависит это число от параметра `RLIMIT_NOFILE` 
+
+При этом в `ulimit -h` (man'а не нашёл) нашёл что есть параметр, связанный с открытыми файлами. Также узнал, что есть софтлимиты и хардлимиты. Софтлимит может быть изменен пользователем, хердлимит только администратором.
+```
+vagrant@vagrant:~$ ulimit -Sn
+1024
+vagrant@vagrant:~$ ulimit -Hn
+1048576
+```
+
+Пока гуглил, узнал (на сайте redhat кажется), что `ulimit` также завязан на `fs.nr_open`, и приведён пример + указаниме максимального числа одновременно открытых файлов (он захардкожен в ядре как я понял).
+
+```
+# ulimit -n 2147483584
+-bash: ulimit: open files: cannot modify limit: Operation not permitted
+# sysctl fs.nr_open
+fs.nr_open = 1048576
+# sysctl -w fs.nr_open=2147483584
+fs.nr_open = 2147483584
+# ulimit -n 2147483584
+# ulimit -n
+2147483584
+# sysctl -w fs.nr_open=2147483585
+sysctl: setting key "fs.nr_open": Invalid argument
+fs.nr_open = 2147483585
+# 
+```
+
+12. Сначала запустил `unshare -f --pid --mount-proc sleep 1h` и потом уже следующие команды, так? Тогда всё получилось! ;)
+```
+root@vagrant:~# ps aux | grep slee[p]
+root       14123  0.0  0.0   8076   592 pts/2    S    19:33   0:00 sleep 1h
+root@vagrant:~# nsenter -p -t 14123 -m
+root@vagrant:/# ps aux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0   8076   592 pts/2    S    19:33   0:00 sleep 1h
+root          22  0.0  0.2   9836  4164 pts/2    S    19:38   0:00 -bash
+root          31  0.0  0.1  11476  3288 pts/2    R+   19:39   0:00 ps aux
+```
+
+13. Прикольная штука, была совсем непонятная, пока не прочитал это в другом виде (не знал, что имя функции может быть ":")
+```
+fu() {
+fu | fu &
+}
+fu
+```
+В описании написано:
+Этот Bash код создаёт функцию, которая запускает ещё два своих экземпляра, которые, в свою очередь снова запускают эту функцию и так до тех пор, пока этот процесс не займёт всю физическую память компьютера, и он просто не зависнет. Ни к чему фатальному это конечно не приведет, но перезагрузиться всё же придётся.
+
+А нам перезагружаться не пришлось вот почему:
+`cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-61.scope`
+
+Вот лимит на пользователя.
+`vagrant@vagrant:~$ systemctl status user-1000.slice | grep limi[t]
+      Tasks: 13 (limit: 5020)`
+      
+Нашёл где он устанавливается
+`$ systemctl show user-1000.slice | grep Tasks
+TasksCurrent=13
+TasksAccounting=yes
+TasksMax=5020`
+
+Судя по всему, мешал им "размножаться" механизм "Process Number Controller", который запрещает форк или клонирование процессов по достижении определённого лимита - https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#pid 
+
+14. 
 
 
-
+15.
 
