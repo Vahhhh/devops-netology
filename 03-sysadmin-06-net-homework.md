@@ -287,7 +287,118 @@ length 60: 172.67.75.22.80 > 10.0.2.15.51872: Flags [F.], seq 377, ack 78, win 6
 
 *10.Приложите конфигурационные файлы, которые у вас получились, и продемонстрируйте работу получившейся конструкции.*
 
+```
+root@lb1:~# ip -4 a | grep inet
+    inet 127.0.0.1/8 scope host lo
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
+    inet 172.28.128.11/24 scope global eth1
+    inet 172.28.128.200/24 scope global secondary eth1:11
+    
+root@lb2:~# ip -4 a | grep inet
+    inet 127.0.0.1/8 scope host lo
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
+    inet 172.28.128.12/24 scope global eth1
+    
+root@lb1:~# cat /etc/keepalived/keepalived.conf
+vrrp_instance proxy_ip1 {
+state MASTER
+interface eth1
+virtual_router_id 1
+priority 100
+virtual_ipaddress {
+172.28.128.200/24 dev eth1 label eth1:11
+}
+}
 
+virtual_server 172.28.128.200 80 {
+    lvs_sched rr                     # Алгоритм балансировки
+                                    # wlc -- больше запросов к серверам с меньшим кол-вом
+                                    # активных соединений.
+    lvs_method DR                      # Режимы перенаправления запросов. Direct routing
+
+    protocol TCP
+    delay_loop 6                    # Интервал между запусками healthchecker'а
+    real_server 172.28.128.21 80 {
+        weight 1
+        TCP_CHECK {                 # Простая проверка доступности локального
+            connect_timeout 2       # и соседнего экземпляров Nginx
+        }
+    }
+    real_server 172.28.128.22 80 {
+        weight 1
+        TCP_CHECK {
+            connect_timeout 2
+        }
+    }
+
+}
+
+
+root@lb2:~# cat /etc/keepalived/keepalived.conf
+vrrp_instance proxy_ip1 {
+state BACKUP
+interface eth1
+virtual_router_id 1
+priority 50
+virtual_ipaddress {
+172.28.128.200/24 dev eth1 label eth1:12
+}
+}
+(остальное совпадает)
+
+root@lb1:~# ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  172.28.128.200:80 rr
+  -> 172.28.128.21:80             Route   1      0          25
+  -> 172.28.128.22:80             Route   1      0          25
+  
+root@web1:~# wc -l /var/log/nginx/access.log
+25 /var/log/nginx/access.log
+
+root@web2:~# wc -l /var/log/nginx/access.log
+25 /var/log/nginx/access.log
+```
+
+Ломаем что-нибудь в lb1.
+
+
+```
+root@lb1:~# ip link set dev eth1 down
+
+root@lb1:~# systemctl status keepalived
+Aug 10 17:35:01 lb1 Keepalived_vrrp[724]: Netlink reports eth1 down
+Aug 10 17:35:01 lb1 Keepalived_vrrp[724]: (proxy_ip1) Entering FAULT STATE
+Aug 10 17:35:01 lb1 Keepalived_vrrp[724]: (proxy_ip1) sent 0 priority
+Aug 10 17:35:06 lb1 Keepalived_healthcheckers[723]: TCP_CHECK on service [172.28.128.21]:tcp:80 failed after 1 retries.
+Aug 10 17:35:06 lb1 Keepalived_healthcheckers[723]: Removing service [172.28.128.21]:tcp:80 to VS [172.28.128.200]:tcp:>
+Aug 10 17:35:09 lb1 Keepalived_healthcheckers[723]: TCP_CHECK on service [172.28.128.22]:tcp:80 failed after 1 retries.
+Aug 10 17:35:09 lb1 Keepalived_healthcheckers[723]: Removing service [172.28.128.22]:tcp:80 to VS [172.28.128.200]:tcp:>
+Aug 10 17:35:09 lb1 Keepalived_healthcheckers[723]: Lost quorum 1-0=1 > 0 for VS [172.28.128.200]:tcp:80
+
+root@lb2:~# systemctl status keepalived
+Aug 10 17:35:04 lb2 Keepalived_vrrp[705]: (proxy_ip1) Entering MASTER STATE
+
+root@lb2:~# ipvsadm -ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  172.28.128.200:80 rr
+  -> 172.28.128.21:80             Route   1      0          25
+  -> 172.28.128.22:80             Route   1      0          25
+```
+
+Если честно - это было не сложно. А вот разместить на одной машине и балансировщик и nginx без НАТа и маркировки трафика у меня не вышло, т.к. 4-й пакет начинал швыряться между балансировщиками (tcpdump помог разобраться).
+1-й пакет летит на lb1 и остаётся на lb1
+2-й пакет летит на lb1 и форвардится на lb2, где принимается балансером и оставляется им на lb2
+3-й пакет летит на lb1 и остаётся на lb1
+4-й пакет летит на lb1 и форвардится на lb2, где принимается балансером и отправляется снова на lb1 (ведь включен rr и это 2й пакет)
+
+Как разрулить с маркировкой - нагуглил - https://kamaok.org.ua/?p=309
+С NAT'ом и допскриптами - нагуглил - https://habr.com/ru/company/netangels/blog/326400/
+
+Но чую есть какая-то возможность.. Буду искать ;)
 
 *11.*
 
