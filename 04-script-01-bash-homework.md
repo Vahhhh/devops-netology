@@ -119,3 +119,37 @@ Thu 13 Aug 2020 07:50:57 PM UTC
 
 ***5. Дополнительное задание (со звездочкой*) - необязательно к выполнению***
 Мы хотим, чтобы у нас были красивые сообщения для коммитов в репозиторий. Для этого нужно написать локальный хук для git, который будет проверять, что сообщение в коммите содержит код текущего задания в квадратных скобках и количество символов в сообщении не превышает 30. Пример сообщения: [04-script-01-bash] сломал хук
+
+Получилось как-то так...
+
+```
+vagrant@vagrant:~/devops-netology$ cat .git/hooks/commit-msg
+#!/usr/bin/env bash
+commit_length=`awk '{print length}' $1`
+commit_subj=`awk '/^\[[0-9][0-9]-.+-[0-9][0-9]-.+\].*/{print $0}' $1`
+if (($commit_length>30))
+then
+        echo "Length >30!"
+        exit 1
+elif [ -z $commit_subj ]
+then
+        echo "Wrong format!"
+        exit 1
+fi
+```
+
+Потом погуглил, оказалось что можно сделать намного проще, но у меня по-другому вышло (не знал что можно grep использовать с regexp'ом)
+
+
+```
+commit_standard_regex='[[0-9]{9,}:[a-z]{3,}]:[a-z].+|merge'
+error_message="Aborting commit. Please ensure your commit message meets the
+               standard requirement. '[#StoryID:CommitType]Commit Message'
+              Use '[#135316555:Feature]Create Kafka Audit Trail' for reference"
+
+
+if ! grep -iqE "$commit_standard_regex" "$1"; then
+    echo "$error_message" >&2
+    exit 1
+fi
+```
