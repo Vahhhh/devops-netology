@@ -1,4 +1,4 @@
-***1. Установите Hashicorp Vault в виртуальной машине Vagrant/VirtualBox.
+***1. Установите Hashicorp Vault в виртуальной машине Vagrant/VirtualBox.***
 
 ```
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -6,7 +6,7 @@ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(l
 sudo apt-get update && sudo apt-get install vault
 ```
 
-***2. Запустить Vault-сервер в dev-режиме.
+***2. Запустить Vault-сервер в dev-режиме.***
 
 ```
 vault server -dev
@@ -60,7 +60,7 @@ Cluster ID      0256ddac-3124-5bbd-d84f-ce275f51f651
 HA Enabled      false
 ```
 
-***3. Используя PKI Secrets Engine, создайте Root CA и Intermediate CA. Обратите внимание на дополнительные материалы по созданию CA в Vault, если с изначальной инструкцией возникнут сложности.
+***3. Используя PKI Secrets Engine, создайте Root CA и Intermediate CA. Обратите внимание на дополнительные материалы по созданию CA в Vault, если с изначальной инструкцией возникнут сложности.***
 
 - Root CA
 ```
@@ -107,7 +107,7 @@ vault write pki_int/roles/example-dot-com \
 
 ```
 
-***4. Согласно этой же инструкции, подпишите Intermediate CA csr на сертификат для тестового домена (например, netology.example.com если действовали согласно инструкции).
+***4. Согласно этой же инструкции, подпишите Intermediate CA csr на сертификат для тестового домена (например, netology.example.com если действовали согласно инструкции).***
 
 `vault write pki_int/issue/example-dot-com common_name="netology.example.com" ttl="24h" > netology.out`
 
@@ -124,7 +124,7 @@ cat test.json | jq -r '.data.certificate' > test.pem && cat test.json | jq -r '.
 ```
 РАБОТАЕТ! :)
 
-***5. Поднимите на localhost nginx, сконфигурируйте default vhost для использования подписанного Vault Intermediate CA сертификата и выбранного вами домена. Сертификат из Vault подложить в nginx руками.
+***5. Поднимите на localhost nginx, сконфигурируйте default vhost для использования подписанного Vault Intermediate CA сертификата и выбранного вами домена. Сертификат из Vault подложить в nginx руками.***
 
 ```
 sudo nano /etc/nginx/sites-enabled/default
@@ -139,7 +139,7 @@ server {
 sudo systemctl restart nginx
 ```
 
-***6. Модифицировав /etc/hosts и системный trust-store, добейтесь безошибочной с точки зрения HTTPS работы curl на ваш тестовый домен (отдающийся с localhost).
+***6. Модифицировав /etc/hosts и системный trust-store, добейтесь безошибочной с точки зрения HTTPS работы curl на ваш тестовый домен (отдающийся с localhost).***
 
 ```
 sudo cp /home/vagrant/intermediate.cert.pem /usr/local/share/ca-certificates/intermediate.cert.crt
@@ -179,7 +179,7 @@ Commercial support is available at
 </html>
 ```
 
-***7. Ознакомьтесь с протоколом ACME и CA Let's encrypt. Если у вас есть во владении доменное имя с платным TLS-сертификатом, который возможно заменить на LE, или же без HTTPS вообще, попробуйте воспользоваться одним из предложенных клиентов, чтобы сделать веб-сайт безопасным (или перестать платить за коммерческий сертификат).
+***7. Ознакомьтесь с протоколом ACME и CA Let's encrypt. Если у вас есть во владении доменное имя с платным TLS-сертификатом, который возможно заменить на LE, или же без HTTPS вообще, попробуйте воспользоваться одним из предложенных клиентов, чтобы сделать веб-сайт безопасным (или перестать платить за коммерческий сертификат).***
 
 У меня в управлении есть CISCO ASA, на которой я через Certbot периодически обновляю сертификаты.
 Правда чтобы закачать их на ASA, приходится поколдовать, но вот со стороны LINUX'а проблем нет.
@@ -287,4 +287,46 @@ SSL-Session:
     Verify return code: 0 (ok)
     Extended master secret: no
 ---
+```
+
+***8.Вместо ручного подкладывания сертификата в nginx, воспользуйтесь Consul для автоматического подтягивания сертификата из Vault.***
+
+Сделал. Одно напрягает, что это всё почти копипастом... :)
+Но работает - огонь!!
+
+```
+watch -n 5 "curl --cacert /home/vagrant/CA_cert.crt --insecure -v https://new.example.com 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'"
+
+Every 5.0s: curl --cacert /home/vagrant/CA_cert.crt --insecure -v https://new.exam...  vagrant: Thu Aug 13 16:52:15 2020
+
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: CN=new.example.com
+*  start date: Aug 13 16:50:21 2020 GMT
+*  expire date: Aug 13 16:52:50 2020 GMT
+*  issuer: CN=example.com Intermediate Authority
+*  SSL certificate verify ok.
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+* Mark bundle as not supporting multiuse
+* Connection #0 to host new.example.com left intact
+
+
+Every 5.0s: curl --cacert /home/vagrant/CA_cert.crt --insecure -v https://new.exam...  vagrant: Thu Aug 13 16:53:09 2020
+
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use http/1.1
+* Server certificate:
+*  subject: CN=new.example.com
+*  start date: Aug 13 16:50:21 2020 GMT
+*  expire date: Aug 13 16:52:50 2020 GMT
+*  issuer: CN=example.com Intermediate Authority
+*  SSL certificate verify result: certificate has expired (10), continuing anyway.
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+* Mark bundle as not supporting multiuse
+* Connection #0 to host new.example.com left intact
 ```
