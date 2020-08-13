@@ -131,7 +131,7 @@ if (($commit_length>30))
 then
         echo "Length >30!"
         exit 1
-elif [ -z $commit_subj ]
+elif [ -z "$commit_subj" ]
 then
         echo "Wrong format!"
         exit 1
