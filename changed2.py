@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
 import os
-from sys import argv
+import sys
 
 if len(sys.argv) == 1:
-	path = "~/devops-netology"
+    path = "~/devops-netology"
 elif len(sys.argv) > 2:
-	print("Ошибка. Слишком много параметров.")
-	sys.exit(1)
-else
-	path = sys.argv[1]
-
-bash_command = ["cd ~/devops-netology", "git status"]
+    print("Ошибка. Слишком много параметров.")
+    sys.exit(1)
+else:
+    path = sys.argv[1]
+path = "cd " + path
+bash_command = [path, "git status"]
 result_os = os.popen(' && '.join(bash_command)).read()
 is_change = False
 for result in result_os.split('\n'):
@@ -19,4 +19,3 @@ for result in result_os.split('\n'):
         prepare_result = result.replace('\tmodified:   ', '')
         print(prepare_result)
         break
-
