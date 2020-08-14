@@ -171,7 +171,7 @@ Fri 14 Aug 2020 06:03:54 PM UTC
 ```
 vagrant@vagrant:~/devops-netology$ cat .git/hooks/commit-msg
 #!/usr/bin/env bash
-commit_length=`awk '{print length}' $1`
+commit_length=`awk '$1 != "#" {print length}' $1`
 commit_subj=`awk '/^\[[0-9][0-9]-.+-[0-9][0-9]-.+\].*/{print $0}' $1`
 if (($commit_length>30))
 then
