@@ -89,33 +89,64 @@ Connection to 87.250.250.242 80 port [tcp/http] succeeded!
 
 ```
 vagrant@vagrant:~$ cat check2.sh
-#!/usr/bin/env bash
-#set -euxo pipefail
-#rm curl.log
-ip_addresses=(173.194.222.113 192.168.0.1 87.250.250.242)
-for ip in ${ip_addresses[@]}
+ip_addresses=(173.194.222.113 87.250.250.242)
+while ((1==1))
 do
-        count=5
-        while (($count > 0))
+        for ip in ${ip_addresses[@]}
         do
-                nc -zvw3 $ip 80 >> check_ip.log 2>&1
-                if (($? != 0))
-                then
-                        date > error.log
-                        echo $ip >> error.log
-                        break
-                else
-                        let "count -= 1"
-                fi
+                count=5
+                while (($count > 0))
+                do
+                        nc -zvw3 $ip 80 >> check_ip.log 2>&1
+                        if (($? != 0))
+                        then
+                                date > error.log
+                                echo $ip >> error.log
+                                exit 1
+                        else
+                                let "count -= 1"
+                        fi
+                done
         done
 done
-
-
-vagrant@vagrant:~$ cat error.log
-Thu 13 Aug 2020 07:50:57 PM UTC
-192.168.0.1
+```
 
 ```
+vagrant@vagrant:~$ cat check_ip.log
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 87.250.250.242 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+Connection to 173.194.222.113 80 port [tcp/http] succeeded!
+nc: connect to 173.194.222.113 port 80 (tcp) timed out: Operation now in progress
+nc: connect to 173.194.222.113 port 80 (tcp) failed: No route to host
+```
+
+```
+vagrant@vagrant:~$ cat error.log
+Fri 14 Aug 2020 06:03:54 PM UTC
+173.194.222.113
+```
+
+Отключил интернет на хосте - записался лог.
 
 ***5. Дополнительное задание (со звездочкой*) - необязательно к выполнению***
 Мы хотим, чтобы у нас были красивые сообщения для коммитов в репозиторий. Для этого нужно написать локальный хук для git, который будет проверять, что сообщение в коммите содержит код текущего задания в квадратных скобках и количество символов в сообщении не превышает 30. Пример сообщения: [04-script-01-bash] сломал хук
