@@ -4,8 +4,8 @@ import subprocess
 import sys
 import requests
 
-username = 'vahhhh'
-password = '9690ef77ebfc31f4d62bc19fb091f79d4f0d2000'
+username = 'Vahhhh'
+password = '8e31651cfd88acad6eb4228464f71ff8a1177f8f'
 
 if len(sys.argv) == 2:
     comment = sys.argv[1]
@@ -37,9 +37,8 @@ payload = {"title": comment, "head": branch_remote, "base": "master"}
 r = requests.post(url, json=payload, auth=(username, password))
 if r.status_code == 201:
     print(f"Please, visit {r.json()['html_url']} to confirm the pull request")
+elif r.status_code == 401:
+    print("Ошибка авторизации")
 else:
     for i in r.json()['errors']:
         print(f"Произошла ошибка - {i['message']} - исправьте, или перезвоните позже!")
-
-
-
