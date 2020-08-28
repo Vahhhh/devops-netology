@@ -3,9 +3,10 @@
 import subprocess
 import sys
 import requests
+import getpass
 
 username = 'Vahhhh'
-password = '8e31651cfd88acad6eb4228464f71ff8a1177f8f'
+password = getpass.getpass()
 
 if len(sys.argv) == 2:
     comment = sys.argv[1]
