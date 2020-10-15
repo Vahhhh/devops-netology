@@ -77,3 +77,75 @@ docker push avakhutinskiy/jenkins-vah:ver1 ; docker push avakhutinskiy/jenkins-v
 ```
 Ссылка на репозиторий
 https://hub.docker.com/repository/docker/avakhutinskiy/jenkins-vah
+
+***Задание 3.***
+
+Dockerfile
+
+```
+FROM node:latest
+
+RUN git clone https://github.com/simplicitesoftware/nodejs-demo.git
+WORKDIR "/nodejs-demo"
+RUN	npm install
+EXPOSE 3000
+CMD ["npm", "start", "0.0.0.0"]
+```
+
+Вывод списка сетей
+```
+PS C:\Users\vah\docker\06-node> docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+048b5e31c23b        bridge              bridge              local
+ec93bd5723cd        host                host                local
+de8b9a9cdc8a        node_js_net         bridge              local
+f43c80a849f4        none                null                local
+```
+
+Дополнение - вывод `inspect` сети
+```
+PS C:\Users\vah> docker network inspect node_js_net
+[
+    {
+        "Name": "node_js_net",
+        "Id": "de8b9a9cdc8a8bb6175143ea870808fed977ebabc106cb92e38b92c2bd64de70",
+        "Created": "2020-10-15T04:58:13.3513261Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "552211eb3cac28784bbcc18662c6fdd11ae649bf5540d568c2d7164d97a3a551": {
+                "Name": "ubuntu",
+                "EndpointID": "674b50096e63c90376724af31f1cfaf9d3812eabf05dc3f9fb4f840f0ed329bc",
+                "MacAddress": "02:42:ac:12:00:03",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            },
+            "5ee7bb82f3f9da18b9b47a524808728af106d9f309db4b207af2b245a04a34b6": {
+                "Name": "node",
+                "EndpointID": "02bffe1859c05427358cf5a27c3c7d7d0f012ae56f258a3ef393c44de674994e",
+                "MacAddress": "02:42:ac:12:00:02",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+```
+
+Скриншот вывода curl'а
+
+![Скриншот вывода curl'а](https://i.imgur.com/15GTmkm.png)
