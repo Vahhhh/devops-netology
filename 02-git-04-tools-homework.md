@@ -37,5 +37,9 @@ commit 41ab0aef7a0fe030e84018973a64135b11abcd70
 commit 66ebff90cdfaa6938f26f908c7ebad8d547fea17
 commit 8364383c359a6b738a436d1b7745ccdce178df47
 ```
+
+Ещ1 одна команда
+`git log -L :globalPluginDirs:plugins.go`                                         `
+
 7. Ответ: команда - `git grep 'func synchronizedWriters'`, затем `git log -S 'func globalPluginDirs' --format="%an %ae"`. Результат вывода: `Martin Atkins mart@degeneration.co.uk`
 
